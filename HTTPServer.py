@@ -20,6 +20,9 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
         #Respond to a GET request.
         try:
+            if self.path == '/':
+                print self
+                
             if self.path.endswith((".html",".htm")):
                 f = open(curdir + sep + self.path) #self.path has /index.html
                 self.send_response(200)
@@ -39,15 +42,39 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 return
                 
             if self.path.endswith(".gif"):
-                # IMPLEMENT THIS
-                return
+				f = open('hello.gif', 'rb')
+				bytes = f.read()
+				f.close()
+				self.wfile.write('HTTP/1.1 200 OK\r\n')
+				self.wfile.write('Content-Type: image/gif \r\n')
+				self.wfile.write('Content-Length: %s\r\n\r\n' % len(bytes))
+				self.wfile.write(bytes)
+				sent += len(bytes)
+				return
                 
             if self.path.endswith(".jpg"):
-                # IMPLEMENT THIS
-                return
+				f = open('world.jpg', 'rb')
+				bytes = f.read()
+				f.close()
+				self.wfile.write('HTTP/1.1 200 OK\r\n')
+				self.wfile.write('Content-Type: image/jpg \r\n')
+				self.wfile.write('Content-Length: %s\r\n\r\n' % len(bytes))
+				self.wfile.write(bytes)
+				sent += len(bytes)
+				return
+				
         except IOError:
             self.send_error(404,'File not found: %self' % self.path)
-            
+	
+	def show_main(self):
+		f = open('index.html')
+		self.send_response(200)
+		self.send_header("Content-type", "text/html")
+		self.end_headers()
+		# Start sending content
+		self.wfile.write(f.read())
+		f.close()
+		
 if __name__ == '__main__':
     server_class = BaseHTTPServer.HTTPServer  #Instantiate a server object
     httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler) #Tell the serever what hostname & port to run on, then what handler to handle the server requests.
