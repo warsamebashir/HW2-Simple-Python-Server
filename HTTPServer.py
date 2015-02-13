@@ -1,32 +1,32 @@
 # University of St. Thomas, Advanced Web Applications, SEIS752 Fall 2009
-#Lloyd Cledwyn
-#Basic Http Server example
-#Adapted from http://wiki.python.org/moin/BaseHttpServer
+# Lloyd Cledwyn
+# Basic Http Server example
+# Adapted from http://wiki.python.org/moin/BaseHttpServer
 import time
 import BaseHTTPServer
 from os import curdir, sep
 
-#Define some variables to be used in the execution of the program
+# Define some variables to be used in the execution of the program
 HOST_NAME = ''  # can be 'localhost' or if you change your hosts.txt file, what happens?? ;)
-PORT_NUMBER = 9000  #If you kill the server un-gracefully you may need to change this to an open socket.
+PORT_NUMBER = 9000  # If you kill the server un-gracefully you may need to change this to an open socket.
 
 
 class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-    #MyHandler class implements standard standard HTTP menthods
-    #currently HEAD and GET requests are handled.
+    # MyHandler class implements standard standard HTTP menthods
+    # currently HEAD and GET requests are handled.
     def do_HEAD(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
 
     def do_GET(self):
-        #Respond to a GET request.
+        # Respond to a GET request.
         try:
             if self.path == '/':
                 self.show_main()
 
             if self.path.endswith((".html", ".htm")):
-                f = open(curdir + sep + self.path)  #self.path has /index.html
+                f = open(curdir + sep + self.path)  # self.path has /index.html
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -75,12 +75,12 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    server_class = BaseHTTPServer.HTTPServer  #Instantiate a server object
-    httpd = server_class((HOST_NAME, PORT_NUMBER),
-                         MyHandler)  #Tell the serever what hostname & port to run on, then what handler to handle the server requests.
+    server_class = BaseHTTPServer.HTTPServer  # Instantiate a server object
+    # Tell the serever what hostname & port to run on, then what handler to handle the server requests.
+    httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
     print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
     try:
-        httpd.serve_forever()  #Run the server.
+        httpd.serve_forever()  # Run the server.
     except KeyboardInterrupt:
         pass
     httpd.server_close()
