@@ -65,13 +65,14 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         f.close()
 
     def show_img(self, img_type):
-        f = open(curdir + sep + self.path, 'rb')
-        bytes = f.read()
-        f.close()
-        self.wfile.write('HTTP/1.1 200 OK\r\n')
-        self.wfile.write('Content-Type: ' + img_type + ' \r\n')
-        self.wfile.write('Content-Length: %s\r\n\r\n' % len(bytes))
-        self.wfile.write(bytes)
+		f = open(curdir + sep + self.path, 'rb')
+		bytes = f.read()
+		f.close()
+		self.send_response(200)
+		self.send_header("Content-type", img_type)
+		self.wfile.write('Content-Length: %s\r\n\r\n' % len(bytes))
+		self.wfile.write(bytes)
+		self.end_headers()
 
 
 if __name__ == '__main__':
